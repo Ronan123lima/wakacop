@@ -2,6 +2,9 @@ package acadamy.wakanda.wakacop.sessaovotacao.application.service;
 
 import acadamy.wakanda.wakacop.sessaovotacao.domain.SessaoVotacao;
 
-public interface SessaVotacaoRepository {
+import java.util.UUID;
+
+public interface SessaoVotacaoRepository {
     SessaoVotacao salva(SessaoVotacao sessaoVotacao);
+    SessaoVotacao buscaPorId(UUID idSessao);
 }
