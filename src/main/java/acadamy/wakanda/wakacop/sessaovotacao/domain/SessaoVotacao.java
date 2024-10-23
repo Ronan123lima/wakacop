@@ -1,6 +1,7 @@
 package acadamy.wakanda.wakacop.sessaovotacao.domain;
 
 import acadamy.wakanda.wakacop.pauta.domain.Pauta;
+import acadamy.wakanda.wakacop.sessaovotacao.application.api.ResultadoSessaoResponse;
 import acadamy.wakanda.wakacop.sessaovotacao.application.api.SessaoAberturaRequest;
 import acadamy.wakanda.wakacop.sessaovotacao.application.api.VotoRequest;
 import jakarta.persistence.*;
@@ -79,9 +80,32 @@ public class SessaoVotacao {
 
     private void validaAssociado(String cpfAssociado) {
         if (this.votos.containsKey(cpfAssociado)) {
-            new RuntimeException("Associado Já Votou Nessa Sessão!");
+            throw new RuntimeException("Associado Já Votou Nessa Sessão!");
             }
         }
+
+    public ResultadoSessaoResponse obtemResultado() {
+        atualizaStatus();
+        return new ResultadoSessaoResponse(this);
     }
+
+    public Long getTotalVotos() {
+        return Long.valueOf(this.votos.size());
+    }
+
+    public Long getTotalSim() {
+        return calculaVotosPorOpcao(OpcaoVoto.SIM);
+    }
+
+    public Long getTotalNao() {
+        return calculaVotosPorOpcao(OpcaoVoto.NAO);
+    }
+
+    private Long calculaVotosPorOpcao(OpcaoVoto opcao) {
+        return votos.values().stream()
+                .filter(voto -> voto.opcaoIgual(opcao))
+                .count();
+    }
+}
 
 
